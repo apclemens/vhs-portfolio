@@ -1,0 +1,10 @@
+<h2>Websites</h2>
+Various websites I've done for others.
+<div id="scrollmenu" class="scrollmenu">
+{% for project in site.websites %}
+  <a href="{{project.ext_url}}" class="project">
+    <span>{{project.title}}</span>
+    <img src="/resources/images/{{project.image}}" />
+  </a>
+{% endfor %}
+</div>

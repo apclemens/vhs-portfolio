@@ -1,0 +1,10 @@
+<h2>Projects</h2>
+Some of my personal side-projects
+<div id="scrollmenu" class="scrollmenu">
+{% for project in site.projects %}
+  <a href="{{project.ext_url}}" class="project">
+    <span>{{project.title}}</span>
+    <img src="/resources/images/{{project.image}}" />
+  </a>
+{% endfor %}
+</div>

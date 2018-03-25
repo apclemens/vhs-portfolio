@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css?family=Quicksand|Limelight|Mina|Roboto+Mono");
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-image: url('/resources/images/stars.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  font-family: 'Quicksand', sans-serif; }
+html {
+	width: 133vh;
+	background-color: black;
+	margin: auto;
+}
+
+canvas {
+	margin: 0;
+	padding: 0;
+}
+
+#svg-filter {
+	height: 0;
+	position: fixed;
+}
+
+#vhs-overlay {
+    position: fixed;
+    display: block;
+    width: 133vh;
+    height: 100%;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    pointer-events: none;
+    margin: auto;
+}
+
+#vhs-overlay iframe{
+    width: 178vh;
+    pointer-events: all;
+    background: black;
+    height: 100%;
+    padding: 0;
+    margin: auto;
+    position: absolute;
+}
+
+#vhs-overlay iframe.masked {
+    -webkit-filter: url("#mask");
+    pointer-events: none;
+}

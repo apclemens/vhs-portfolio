@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand|Limelight|Mina|Roboto+Mono');
+
+
+html,body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #DADADA;
+    font-family: 'Quicksand', sans-serif;
+}
+
+h1 {
+    font-family: 'Limelight', cursive;
+}
+h2 {
+    font-family: 'Mina', sans-serif;
+}
+a {
+    font-family: 'Roboto Mono', monospace;
+    text-decoration: none;
+    outline: 0;
+}
+
+#content {
+	margin: 90px 20% 40px;
+	padding: 10px;
+	border-style: solid;
+	display: inline-block;
+	position: relative;
+    overflow: hidden;
+}
+
+#links {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	padding-top: 20px;
+	width: 100%;
+	display: flex;
+}
+
+.dropdown {
+    position: relative;
+}
+
+#links > li {
+	display: inline;
+	flex: 1;
+	text-align: center;
+    position: relative;
+}
+
+#front-image {
+	float: right;
+	padding-left: 10px;
+	height: 200px;
+}
+
+#non-links {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	overflow: hidden;
+	height: 200px; /* same as height of front-image */
+}
+
+#header {
+	cursor: pointer;
+}
+
+#section {
+	margin: 0 20%;
+	padding: 0;
+	border-style: solid;
+	height: 0;
+	overflow: hidden;
+	white-space: nowrap;
+    position:relative;
+    opacity: 0;
+}
+#section.show {
+	margin: 0 20%;
+	height: 200px;
+}
+
+.section-page {
+	width: calc(100% - 20px);
+	height: calc(100% - 20px);
+	display: inline-block;
+	white-space: initial;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 10px;
+}
+
+#stem {
+    border-style: solid;
+    border-width: 2.5px;
+    height: 0px;
+    width: 0;
+    position: absolute;
+    opacity: 0;
+}
+
+#content, #section {
+    background-color: #EAEAEA;
+}

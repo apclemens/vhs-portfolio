@@ -1,0 +1,10 @@
+<h2>Themes</h2>
+ Fancy alternate themes for this portfolio site.
+<div id="scrollmenu" class="scrollmenu">
+{% for project in site.themes %}
+  <a href="{{project.ext_url}}" class="project">
+    <span>{{project.title}}</span>
+    <img src="/resources/images/{{project.image}}" />
+  </a>
+{% endfor %}
+</div>

@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{{page.title}}</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
+    <script src="/resources/fonts/fontJSON.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/DDSLoader.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/MTLLoader.js"></script>
+    <script src="/resources/js/THREE/OBJLoader.js"></script>
+    <script src="http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js"></script>
+  </head>
+
+  <body>
+	  <!--	  <script src="/resources/js/transitions.js"></script> -->
+	  <script>
+
+var info, stats, renderer, scene, camera, controls;
+var screenX = 0, screenY = 0; // gotta keep track of the mouse position
+
+init();
+animate();
+
+function init() {
+	var geometry, material, mesh;
+
+
+	renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true, clearColor: 0xffffff});
+	renderer.setSize(window.innerHeight * 4 / 3, window.innerHeight-4);
+	document.body.appendChild(renderer.domElement);
+	scene = new THREE.Scene();
+
+	camera = new THREE.PerspectiveCamera(40, 4 / 3, 1, 3000);
+	camera.position.set(0, 0, 200);
+	var ambientLight = new THREE.AmbientLight(0xcccccc, 0.8);
+	scene.add(ambientLight);
+	material = new THREE.MeshNormalMaterial();
+	controls = new THREE.TrackballControls(camera, renderer.domElement);
+	
+	//  AIzaSyD7Opj1_EU1VU2dXU8WPj0k-I9GNk0ayss 
+
+	var loader = new THREE.FontLoader();
+	var font = loader.parse(fontJSON);
+	var textGeometry = new THREE.TextGeometry('Andrew Clemens', {
+		font: font,
+		size: 12,
+		height: 5,
+		material: 0,
+	});
+	textGeometry.computeBoundingBox();
+	mesh = new THREE.Mesh(textGeometry, material);
+	var bbox = new THREE.Box3().setFromObject(mesh);
+	// we want to set this mesh to a position at the top of the screen
+	// top of mesh should be window.innerHeight / 2
+	var left = (bbox.min.x - bbox.max.x) / 2;
+	var bottom = 65 - (bbox.max.y - bbox.min.y);
+	mesh.position.set(left, bottom, 0);
+	scene.add(mesh);
+
+
+
+
+
+
+	// fuckin triceratops
+	// https://sketchfab.com/models/00099fa513df45a8a6e1f70013e0f695
+	var onProgress = function (xhr) {
+		if (xhr.lengthComputable) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log(Math.round(percentComplete, 2) + '% downloaded');
+		}
+	};
+	var onError = function(xhr) {console.log(xhr)};
+
+	THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('/resources/models/');
+	mtlLoader.load('triceratops.mtl', function(materials) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('/resources/models/');
+		objLoader.load('triceratops.obj', function(object) {
+			var bbox = new THREE.Box3().setFromObject(object);
+			object.scale.set(7, 7, 7);
+			object.position.set(-13, 56.8, 100);
+			object.rotation.set(2.371, -.3, 13.056);
+			scene.add(object);
+		}, onProgress, onError);
+	});
+
+
+
+
+
+
+
+
+	// biplane
+	// https://sketchfab.com/models/358c6c91522b49589557c8dc1efc56dd
+	var onProgress = function (xhr) {
+		if (xhr.lengthComputable) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log(Math.round(percentComplete, 2) + '% downloaded');
+		}
+	};
+	var onError = function(xhr) {console.log(xhr)};
+
+	THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath('/resources/models/biplane/');
+	mtlLoader.load('se5.mtl', function(materials) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('/resources/models/biplane/');
+		objLoader.load('se5.obj', function(object) {
+			var bbox = new THREE.Box3().setFromObject(object);
+			object.scale.set(10, 10, 10);
+			object.position.set(57, 0, -50);
+			object.rotation.set(.7, .8, -.3);
+			scene.add(object);
+		}, onProgress, onError);
+	});
+
+
+
+
+
+
+}
+
+function customAnimations() {
+	camera.position.set(screenX/100, -screenY/100, 200);
+}
+
+function animate() {
+	requestAnimationFrame(animate);
+	renderer.render(scene, camera);
+//	controls.update();
+	customAnimations();
+}
+
+
+window.onmousemove = function(e) {
+	screenX = e.clientX;
+	screenY = e.clientY;
+}
+
+ $(document).keypress(function(e){ 
+	 var index = 3
+	 var key = e.keyCode ? e.keyCode : e.which;
+	 console.log(e.keyCode);
+	 if (e.which == 113){
+		 scene.children[index].rotation.x += .1;
+	 }
+	 if (e.which == 119){
+		 scene.children[index].rotation.x -= .1;
+	 }
+	 if (e.which == 97){
+		 scene.children[index].rotation.y += .1;
+	 }
+	 if (e.which == 115){
+		 scene.children[index].rotation.y -= .1;
+	 }
+	 if (e.which == 122){
+		 scene.children[index].rotation.z += .1;
+	 }
+	 if (e.which == 120){
+		 scene.children[index].rotation.z -= .1;
+	 }
+	 if (key == 37){
+		 scene.children[index].position.x += 1;
+	 }
+	 if (key == 39){
+		 scene.children[index].position.x -= 1;
+	 }
+	 if (key == 38){
+		 scene.children[index].position.y += 1;
+	 }
+	 if (key == 40){
+		 scene.children[index].position.y -= 1;
+	 }
+ });
+
+
+
+	  </script>
+  </body>
+</html>
