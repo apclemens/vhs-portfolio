@@ -15,16 +15,18 @@
     <script src="/resources/js/THREE/SVGRenderer.js"></script>
     <script src="/resources/js/THREE/Projector.js"></script>
     <script src="http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js"></script>
+    <script src="https://threejs.org/examples/js/libs/tween.min.js"></script>
   </head>
 
   <body>
 	  {% include vhsoverlay.html %}
-	  <!--	  <script src="/resources/js/transitions.js"></script> -->
+	  	  <script src="/resources/js/transitions.js"></script>
 	  <script>
 
 var info, stats, renderer, scene, camera, controls;
-var mouse = {x:0, y:0}, INTERSECTED, projector;
+var mouse = {x:0, y:0}, INTERSECTED, projector, visibleLabel;
 var boundingBoxes = [];
+var movingCamera = true;
 
 init();
 animate();
@@ -73,7 +75,7 @@ function init() {
 	var bottom = 65 - (bbox.max.y - bbox.min.y);
 	mesh.position.set(left, bottom, 0);
 	scene.add(mesh);
-    addBoundingBox(mesh);
+    addBoundingBox(mesh, "about");
 
 
 
@@ -97,7 +99,7 @@ function init() {
 			object.position.set(-13, 56.8, 100);
 			object.rotation.set(2.371, -.3, 13.056);
 			scene.add(object);
-            addBoundingBox(object);
+            addBoundingBox(object, "projects");
 		}, onProgress, onError);
 	});
 
@@ -125,7 +127,7 @@ function init() {
 			object.position.set(57, 0, -50);
 			object.rotation.set(.7, .8, -.3);
 			scene.add(object);
-            addBoundingBox(object);
+            addBoundingBox(object, "websites");
 		}, onProgress, onError);
 	});
 
@@ -147,7 +149,7 @@ function init() {
 			object.position.set(-44, -34, 150);
 			object.rotation.set(-0.8, 2.8, -1.2);
 			scene.add(object);
-            addBoundingBox(object);
+            addBoundingBox(object, "themes");
 		}, onProgress, onError);
 	});
 
@@ -175,7 +177,7 @@ function init() {
 			object.position.set(79, -50, 0);
 			object.rotation.set(0.3, 0.3, 2.1);
 			scene.add(object);
-            addBoundingBox(object);
+            addBoundingBox(object, "contact");
 		}, onProgress, onError);
 	});
 
@@ -191,11 +193,13 @@ function init() {
 
 var multiplier = 3;
 function customAnimations() {
-	camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
+    if (movingCamera)
+    	camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
+    camera.updateMatrixWorld();
     getIntersections();
 }
 
-function addBoundingBox(object) {
+function addBoundingBox(object, name) {
     var wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0xff0000,
         wireframe: true
@@ -206,8 +210,36 @@ function addBoundingBox(object) {
     box.position.set((bbox.max.x+bbox.min.x)/2, (bbox.max.y+bbox.min.y)/2, (bbox.max.z+bbox.min.z)/2);
     box.material.transparent = true;
     box.material.opacity = 0;
+    box.name = name;
     boundingBoxes.push(box);
     scene.add(box);
+
+    if (name!='about') {return;}
+
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    context.font = "Regular 16px Arial";
+    context.fillStyle = "rgba(255, 0, 0, 0.95)";
+    context.fillText('about', 0, 50);
+    var texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+    var textMaterial = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+    textMaterial.transparent = true;
+    var textMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(canvas.width, canvas.height),
+            textMaterial
+            );
+    textMesh.position.set(bbox.min.x, 0, bbox.min.z);
+    textMesh.position.set(110, 15, 0);
+    scene.add(textMesh);
+    console.log(textMesh);
+}
+
+function toXYCoords(pos) {
+    var vector = projector.unprojectVector(pos.clone(), camera);
+    vector.x = (vector.x + 1)/2 * window.innerWidth;
+    vector.y = -(vector.y - 1)/2 * window.innerHeight;
+    return vector;
 }
 
 function getIntersections() {
@@ -225,21 +257,21 @@ function getIntersections() {
     if (intersects.length > 0) {
         if (intersects[0].object != INTERSECTED) {
             if (INTERSECTED) {
-                toggleBoundingBox(INTERSECTED, false);
+                toggleBoundingBoxVisibility(INTERSECTED, false);
             };
             INTERSECTED = intersects[intersects.length-1].object;
-            toggleBoundingBox(INTERSECTED, true);
+            toggleBoundingBoxVisibility(INTERSECTED, true);
             // store material for this object for later restoration
         }
     } else { // there are no intersections
         if (INTERSECTED) {
-            toggleBoundingBox(INTERSECTED, false);
+            toggleBoundingBoxVisibility(INTERSECTED, false);
         }
         INTERSECTED = null;
     }
 }
 
-function toggleBoundingBox(object, show) {
+function toggleBoundingBoxVisibility(object, show) {
     object.material.transparent = !show;
     object.material.opacity = show ? 1 : 0;
     document.body.style.cursor = show ? "pointer" : "auto";
@@ -249,6 +281,7 @@ function animate() {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 //	controls.update();
+    TWEEN.update();
 	customAnimations();
 }
 
@@ -258,39 +291,53 @@ window.onmousemove = function(e) {
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 }
 
-var index = 5
+window.onclick = function(e) {
+    if (!INTERSECTED) return;
+    movingCamera = false;
+    transition_to('/section_parts/'+INTERSECTED.name+'.html');
+}
+
+var index = 5;
  $(document).keypress(function(e){ 
+     if (index == -1) obj = camera;
+     else obj = scene.children[index];
 	 var key = e.keyCode ? e.keyCode : e.which;
-	 console.log(e.keyCode);
+	 console.log(key);
 	 if (e.which == 113){
-		 scene.children[index].rotation.x += .1;
+		 obj.rotation.x += .1;
 	 }
 	 if (e.which == 119){
-		 scene.children[index].rotation.x -= .1;
+		 obj.rotation.x -= .1;
 	 }
 	 if (e.which == 97){
-		 scene.children[index].rotation.y += .1;
+		 obj.rotation.y += .1;
 	 }
 	 if (e.which == 115){
-		 scene.children[index].rotation.y -= .1;
+		 obj.rotation.y -= .1;
 	 }
 	 if (e.which == 122){
-		 scene.children[index].rotation.z += .1;
+		 obj.rotation.z += .1;
 	 }
 	 if (e.which == 120){
-		 scene.children[index].rotation.z -= .1;
+		 obj.rotation.z -= .1;
 	 }
 	 if (key == 37){
-		 scene.children[index].position.x += 1;
+		 obj.position.x += 1;
 	 }
 	 if (key == 39){
-		 scene.children[index].position.x -= 1;
+		 obj.position.x -= 1;
 	 }
 	 if (key == 38){
-		 scene.children[index].position.y += 1;
+		 obj.position.y += 1;
 	 }
 	 if (key == 40){
-		 scene.children[index].position.y -= 1;
+		 obj.position.y -= 1;
+	 }
+	 if (key == 44){
+		 obj.position.z += 1;
+	 }
+	 if (key == 46){
+		 obj.position.z -= 1;
 	 }
  });
 

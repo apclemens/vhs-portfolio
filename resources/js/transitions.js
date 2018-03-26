@@ -17,7 +17,7 @@ window.onpopstate = function(e) {
     }
 };
 
-function transition_to(page, index, newurl, newtitle, setstate) {
+function xtransition_to(page, index, newurl, newtitle, setstate) {
     document.title = newtitle;
     if (setstate) {
         window.history.pushState({
@@ -34,6 +34,19 @@ function transition_to(page, index, newurl, newtitle, setstate) {
         // pull up header and show things
         transition_up(page, index);
     }
+}
+
+function transition_to(page) {
+    new TWEEN.Tween(camera.position).to({
+        x: 0,
+        y: 0,
+        z: 146
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    new TWEEN.Tween(camera.rotation).to({
+        x: 0.7,
+        y: 0,
+        z: 0
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
 }
 
 function transition_over(page, index) {
