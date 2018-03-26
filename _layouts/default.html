@@ -11,6 +11,9 @@
     <script src="https://threejs.org/examples/js/loaders/DDSLoader.js"></script>
     <script src="https://threejs.org/examples/js/loaders/MTLLoader.js"></script>
     <script src="/resources/js/THREE/OBJLoader.js"></script>
+    <script src="/resources/js/THREE/SVGLoader.js"></script>
+    <script src="/resources/js/THREE/SVGRenderer.js"></script>
+    <script src="/resources/js/THREE/Projector.js"></script>
     <script src="http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js"></script>
   </head>
 
@@ -20,7 +23,8 @@
 	  <script>
 
 var info, stats, renderer, scene, camera, controls;
-var screenX = 0, screenY = 0; // gotta keep track of the mouse position
+var mouse = {x:0, y:0}, INTERSECTED, projector;
+var boundingBoxes = [];
 
 init();
 animate();
@@ -29,6 +33,7 @@ function init() {
 	var geometry, material, mesh;
 
 
+    projector = new THREE.Projector()
 	renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true, clearColor: 0xffffff});
 	renderer.setSize(window.innerHeight * 4 / 3, window.innerHeight-4);
 	document.body.appendChild(renderer.domElement);
@@ -41,6 +46,14 @@ function init() {
 	material = new THREE.MeshNormalMaterial();
 	controls = new THREE.TrackballControls(camera, renderer.domElement);
 	
+	var onProgress = function (xhr) {
+		if (xhr.lengthComputable) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log(Math.round(percentComplete, 2) + '% downloaded');
+		}
+	};
+	var onError = function(xhr) {console.log(xhr)};
+
 	//  AIzaSyD7Opj1_EU1VU2dXU8WPj0k-I9GNk0ayss 
 
 	var loader = new THREE.FontLoader();
@@ -60,6 +73,7 @@ function init() {
 	var bottom = 65 - (bbox.max.y - bbox.min.y);
 	mesh.position.set(left, bottom, 0);
 	scene.add(mesh);
+    addBoundingBox(mesh);
 
 
 
@@ -68,14 +82,6 @@ function init() {
 
 	// fuckin triceratops
 	// https://sketchfab.com/models/00099fa513df45a8a6e1f70013e0f695
-	var onProgress = function (xhr) {
-		if (xhr.lengthComputable) {
-			var percentComplete = xhr.loaded / xhr.total * 100;
-			console.log(Math.round(percentComplete, 2) + '% downloaded');
-		}
-	};
-	var onError = function(xhr) {console.log(xhr)};
-
 	THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
 
 	var mtlLoader = new THREE.MTLLoader();
@@ -91,6 +97,7 @@ function init() {
 			object.position.set(-13, 56.8, 100);
 			object.rotation.set(2.371, -.3, 13.056);
 			scene.add(object);
+            addBoundingBox(object);
 		}, onProgress, onError);
 	});
 
@@ -118,6 +125,7 @@ function init() {
 			object.position.set(57, 0, -50);
 			object.rotation.set(.7, .8, -.3);
 			scene.add(object);
+            addBoundingBox(object);
 		}, onProgress, onError);
 	});
 
@@ -139,6 +147,7 @@ function init() {
 			object.position.set(-44, -34, 150);
 			object.rotation.set(-0.8, 2.8, -1.2);
 			scene.add(object);
+            addBoundingBox(object);
 		}, onProgress, onError);
 	});
 
@@ -166,6 +175,7 @@ function init() {
 			object.position.set(79, -50, 0);
 			object.rotation.set(0.3, 0.3, 2.1);
 			scene.add(object);
+            addBoundingBox(object);
 		}, onProgress, onError);
 	});
 
@@ -179,8 +189,60 @@ function init() {
 
 }
 
+var multiplier = 3;
 function customAnimations() {
-	camera.position.set(screenX/100, -screenY/100, 200);
+	camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
+    getIntersections();
+}
+
+function addBoundingBox(object) {
+    var wireframeMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        wireframe: true
+    });
+    var bbox = new THREE.Box3().setFromObject(object);
+    var geometry = new THREE.BoxGeometry(bbox.max.x - bbox.min.x, bbox.max.y - bbox.min.y, bbox.max.z - bbox.min.z);
+    var box = new THREE.Mesh(geometry, wireframeMaterial);
+    box.position.set((bbox.max.x+bbox.min.x)/2, (bbox.max.y+bbox.min.y)/2, (bbox.max.z+bbox.min.z)/2);
+    box.material.transparent = true;
+    box.material.opacity = 0;
+    boundingBoxes.push(box);
+    scene.add(box);
+}
+
+function getIntersections() {
+    // create a ray with origin at the mouse position
+    // and direction into the scene (camera direction)
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+    // create an array containing all objects in the scene with which the ray intersects
+    var intersects = ray.intersectObjects(boundingBoxes);
+
+    // INTERSECTED = the object in the scene currently closest to the camera
+    // and intersected by the ray projected from the mouse position
+    if (intersects.length > 0) {
+        if (intersects[0].object != INTERSECTED) {
+            if (INTERSECTED) {
+                toggleBoundingBox(INTERSECTED, false);
+            };
+            INTERSECTED = intersects[intersects.length-1].object;
+            toggleBoundingBox(INTERSECTED, true);
+            // store material for this object for later restoration
+        }
+    } else { // there are no intersections
+        if (INTERSECTED) {
+            toggleBoundingBox(INTERSECTED, false);
+        }
+        INTERSECTED = null;
+    }
+}
+
+function toggleBoundingBox(object, show) {
+    object.material.transparent = !show;
+    object.material.opacity = show ? 1 : 0;
+    document.body.style.cursor = show ? "pointer" : "auto";
 }
 
 function animate() {
@@ -192,8 +254,8 @@ function animate() {
 
 
 window.onmousemove = function(e) {
-	screenX = e.clientX;
-	screenY = e.clientY;
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 }
 
 var index = 5
