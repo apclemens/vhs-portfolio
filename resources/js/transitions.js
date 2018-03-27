@@ -36,7 +36,7 @@ function xtransition_to(page, index, newurl, newtitle, setstate) {
     }
 }
 
-function transition_to(page) {
+function transition_to_about(page) {
     new TWEEN.Tween(camera.position).to({
         x: 8,
         y: 60,

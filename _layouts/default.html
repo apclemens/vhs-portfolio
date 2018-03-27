@@ -37,7 +37,7 @@ var mouse = {x:0, y:0}, INTERSECTED, projector, visibleLabel;
 var boundingBoxes = [];
 var movingCamera = true;
 var loaded = 0;
-var NUM_TO_LOAD = 4;
+var NUM_TO_LOAD = 5;
 
 init();
 animate();
@@ -78,13 +78,17 @@ function init() {
         textGeometry.computeBoundingBox();
         mesh = new THREE.Mesh(textGeometry, material);
         var bbox = new THREE.Box3().setFromObject(mesh);
-        // we want to set this mesh to a position at the top of the screen
-        // top of mesh should be window.innerHeight / 2
         var left = (bbox.min.x - bbox.max.x) / 2;
         var bottom = 65 - (bbox.max.y - bbox.min.y);
         mesh.position.set(left, bottom, 0);
         scene.add(mesh);
         addBoundingBox(mesh, "about");
+        mesh.loading_function = function() {
+            this.position.z = -2800;
+            new TWEEN.Tween(this.position).to({z:0}, 2000).easing(TWEEN.Easing.Linear.None).start();
+        }
+	    loaded += 1;
+	    if (loaded == NUM_TO_LOAD) page_is_loaded();
     });
 
 
@@ -110,8 +114,14 @@ function init() {
 			object.rotation.set(2.371, -.3, 13.056);
 			scene.add(object);
             addBoundingBox(object, "projects");
+            object.loading_function = function() {
+                object.rotation.z -= 2*Math.PI;
+                object.position.x = 0;
+                new TWEEN.Tween(this.position).to({x:-13}, 2000).easing(TWEEN.Easing.Linear.None).start();
+                new TWEEN.Tween(this.rotation).to({z:13.056}, 2000).easing(TWEEN.Easing.Linear.None).start();
+            }
 	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) $('body').addClass('loaded');
+	    if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -141,7 +151,7 @@ function init() {
 			scene.add(object);
             addBoundingBox(object, "websites");
 	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) $('body').addClass('loaded');
+	    if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -165,7 +175,7 @@ function init() {
 			scene.add(object);
             addBoundingBox(object, "themes");
 	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) $('body').addClass('loaded');
+	    if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -195,7 +205,7 @@ function init() {
 			scene.add(object);
             addBoundingBox(object, "contact");
 	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) $('body').addClass('loaded');
+	    if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -209,8 +219,16 @@ function init() {
 
 }
 
-var multiplier = 3;
+function page_is_loaded() {
+
+    $('body').addClass('loaded');
+    scene.children.forEach(function(obj) {
+        if(obj.hasOwnProperty('loading_function')) obj.loading_function();
+    })
+}
+
 function customAnimations() {
+    var multiplier = 3;
     if (movingCamera)
     	camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
     camera.updateMatrixWorld();
@@ -313,7 +331,11 @@ window.onmousemove = function(e) {
 window.onclick = function(e) {
     if (!INTERSECTED) return;
     movingCamera = false;
-    transition_to('/section_parts/'+INTERSECTED.name+'.html');
+    switch (INTERSECTED.name) {
+        case 'about':
+            transition_to_about('/section_parts/'+INTERSECTED.name+'.html');
+            break;
+    }
 }
 
 var index = 5;
