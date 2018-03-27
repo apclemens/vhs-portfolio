@@ -252,6 +252,30 @@ function transition_open_about() {
     camera.rotation.set(Math.PI/8, 0, Math.PI/2);
 }
 
+function transition_open_projects() {
+    movingCamera = false;
+    camera.position.set(25.8, 19, 44);
+    camera.rotation.set(0, 1.9, 0);
+}
+
+function transition_open_websites() {
+    movingCamera = false;
+    camera.position.set(-18.5, -70, -16);
+    camera.rotation.set(1, -0.8, 0.2);
+}
+
+function transition_open_themes() {
+    movingCamera = false;
+    camera.position.set(-9.4, 21.6, 87);
+    camera.rotation.set(-1, 0.2, 0.6);
+}
+
+function transition_open_contact() {
+    movingCamera = false;
+    camera.position.set(109.6, -43, 81);
+    camera.rotation.set(-0.2, 0.4, 0.6);
+}
+
 function transition_open_section(index) {
     $('body').addClass('loaded');
     // indexes:
@@ -267,6 +291,18 @@ function transition_open_section(index) {
             break;
         case -2:
             transition_open_about();
+            break;
+        case 0:
+            transition_open_projects();
+            break;
+        case 1:
+            transition_open_websites();
+            break;
+        case 2:
+            transition_open_themes();
+            break;
+        case 3:
+            transition_open_contact();
             break;
     }
 }

@@ -32,14 +32,16 @@
 	  	  <script src="/resources/js/transitions.js"></script>
 	  <script>
 
+var this_page_index = {{page.section_id}};
+
 var info, stats, renderer, scene, camera, controls;
 var mouse = {x:0, y:0}, INTERSECTED, projector, visibleLabel;
 var boundingBoxes = [];
-var currentBoundingBoxList = boundingBoxes;
+var currentBoundingBoxList = [];
+if (this_page_index == -1) currentBoundingBoxList = boundingBoxes;
 var movingCamera = true;
 var loaded = 0;
 var NUM_TO_LOAD = 5;
-var this_page_index = {{page.section_id}};
 
 init();
 animate();
