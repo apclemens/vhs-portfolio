@@ -290,20 +290,22 @@ function addBoundingBox(object, name, label_pos) {
     var textHeight = 200;
     var textWidth = 0;
     var actualFontSize = 2;
-    context.font = "normal " + textHeight + "px Arial";
+    context.font = "" + textHeight + "px Roboto Mono";
     metrics = context.measureText(name);
     var textWidth = metrics.width;
     canvas.width = textWidth;
     canvas.height = textHeight;
-    context.font = "normal " + textHeight + "px Arial";
+    context.font = "" + textHeight + "px Roboto Mono";
     context.textAlign = "center";
     context.textBaseline = "middle";
-    context.fillStyle = "#ff0000";
+    context.fillStyle = "#000000";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#ffffff";
     context.fillText(name, textWidth/2, textHeight/2);
 
     var texture = new THREE.Texture(canvas);
     texture.needsUpdate = true;
-    var textMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide, map: texture});
+    var textMaterial = new THREE.MeshBasicMaterial({color:0xD32F2F, side: THREE.DoubleSide, map: texture});
     textMaterial.transparent = true;
     textMaterial.opacity = 0;
     var planeGeo = new THREE.PlaneGeometry(textWidth/20, textHeight/20);
