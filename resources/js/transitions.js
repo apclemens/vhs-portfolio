@@ -7,13 +7,13 @@ $('#links').find('a').each(function(index, value) {
 
 window.onpopstate = function(e) {
     if (e.state) {
-        if (e.state.newtitle == "andrew clemens") {
-            transition_down(false);
+        if (e.state.newtitle == "Andrew Clemens") {
+            transition_to_home(false);
         } else {
             transition_to(e.state.page, e.state.index, e.state.newurl, e.state.newtitle, false);
         }
     } else {
-        transition_down(false);
+        transition_to_home(false);
     }
 };
 
@@ -36,7 +36,8 @@ function xtransition_to(page, index, newurl, newtitle, setstate) {
     }
 }
 
-function transition_to_about(page) {
+function transition_to_about(setstate) {
+    if (setstate) set_state('about');
     new TWEEN.Tween(camera.position).to({
         x: 0,
         y: 60,
@@ -47,6 +48,39 @@ function transition_to_about(page) {
         y: 0,
         z: Math.PI / 2
     }, 2000).easing(TWEEN.Easing.Linear.None).start();
+}
+
+function transition_to_home(setstate) {
+    switch (document.title) {
+        case 'Andrew Clemens - about':
+            transition_to_home_from_about(setstate);
+            break;
+    }
+}
+
+function set_state(page) {
+    var lookup = {
+        'home': {'newtitle': 'Andrew Clemens', 'newurl': '/'},
+        'about': {'newtitle': 'Andrew Clemens - about', 'newurl': '/about'},
+    }
+    document.title = lookup[page]['newtitle'];
+    window.history.pushState({
+    }, "", lookup[page]['newurl']);
+}
+
+function transition_to_home_from_about(setstate) {
+    if (setstate) set_state('home');
+    new TWEEN.Tween(camera.position).to({
+        x:0,
+        y:0,
+        z:200
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    new TWEEN.Tween(camera.rotation).to({
+        x:0,
+        y:0,
+        z:0
+    }, 2000).easing(TWEEN.Easing.Linear.None).onComplete(function(){movingCamera = true;})
+    .start();
 }
 
 function transition_over(page, index) {
@@ -156,66 +190,32 @@ function transition_down(setstate) {
 }
 
 function transition_open_front() {
-    var height = $('#content').height();
-    $('.dropdown').css('bottom', '+=300px');
-    $('#content').css({
-        'height': 0,
-        'overflow': 'hidden',
-    });
-    $('#links li').css('bottom', -50);
+    scene.children.forEach(function(obj) {
+        if(obj.hasOwnProperty('loading_function')) obj.loading_function();
+    })
+}
 
-    $('#content').animate({
-        'height': height
-    }, 500);
-    setTimeout(function() {
-        $('.dropdown').animate({
-            'bottom': 0
-        }, 500);
-    }, 500);
-    $('#links li').each(function(index) {
-        var ths = this;
-        setTimeout(function() {
-            $(ths).animate({
-                'bottom': 0
-            }, 250);
-        }, 100 * index + 900);
-    });
-    setTimeout(function() {
-        $('#content').css({
-            'height': 'auto',
-        });
-    }, 700)
-    setTimeout(function() {
-        $('#content').css({
-            'overflow': 'visible',
-        });
-    }, 1450)
+function transition_open_about() {
+    movingCamera = false;
+    camera.position.set(0, 60, 252);
+    camera.rotation.set(Math.PI/8, 0, Math.PI/2);
 }
 
 function transition_open_section(index) {
-    if (index == -1) {
-        transition_open_front();
-        return;
+    $('body').addClass('loaded');
+    // indexes:
+    //   -1: home
+    //   -2: about
+    //   0: projects
+    //   1: websites
+    //   2: themes
+    //   3: contact
+    switch (index) {
+        case -1:
+            transition_open_front();
+            break;
+        case -2:
+            transition_open_about();
+            break;
     }
-    $("#links>li:nth-child(" + (index + 1) + ")").addClass('current');
-    $('#non-links').css('height', 0);
-    $('#stem').css({
-        'opacity': 1,
-        'left': '' + (25 * index + 12.5) + '%'
-    });
-    $('#stem').css('height', 45);
-    $('#section').css({
-        'opacity': 1,
-        'height': 250
-    });
-    $('#section' + index).css('top', 0);
-    if (index != 3) set_scroll();
 }
-
-$('#header a').click(function(e) {
-    e.preventDefault();
-    if (document.title == 'andrew clemens') {
-        return;
-    }
-    transition_down(true);
-});

@@ -38,6 +38,7 @@ var boundingBoxes = [];
 var movingCamera = true;
 var loaded = 0;
 var NUM_TO_LOAD = 5;
+var this_page_index = {{page.section_id}};
 
 init();
 animate();
@@ -98,7 +99,7 @@ function init() {
             new TWEEN.Tween(this.position).to({z:0}, 2000).easing(TWEEN.Easing.Linear.None).start();
         }
 	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) page_is_loaded();
+        if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
     });
 
 
@@ -137,7 +138,7 @@ function init() {
                 new TWEEN.Tween(this.rotation).to({z: 13.056}, 2000).easing(TWEEN.Easing.Linear.None).start();
             }
             loaded += 1;
-            if (loaded == NUM_TO_LOAD) page_is_loaded();
+            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
 		}, onProgress, onError);
 	});
 
@@ -173,7 +174,7 @@ function init() {
                 }
             });
             loaded += 1;
-            if (loaded == NUM_TO_LOAD) page_is_loaded();
+            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
 		}, onProgress, onError);
 	});
 
@@ -207,7 +208,7 @@ function init() {
                 new TWEEN.Tween(this.position).to({x:-7, y:-31, z:13}, 2000).easing(TWEEN.Easing.Linear.None).start();
             }
             loaded += 1;
-            if (loaded == NUM_TO_LOAD) page_is_loaded();
+            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
 		}, onProgress, onError);
 	});
 
@@ -243,7 +244,7 @@ function init() {
                 }
             });
             loaded += 1;
-            if (loaded == NUM_TO_LOAD) page_is_loaded();
+            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
 		}, onProgress, onError);
 	});
 
@@ -257,16 +258,8 @@ function init() {
 
 }
 
-function page_is_loaded() {
-
-    $('body').addClass('loaded');
-    scene.children.forEach(function(obj) {
-        if(obj.hasOwnProperty('loading_function')) obj.loading_function();
-    })
-}
-
 function customAnimations() {
-    var multiplier = 1;
+    var multiplier = 3;
     if (movingCamera)
     	camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
     camera.updateMatrixWorld();
@@ -384,7 +377,7 @@ window.onclick = function(e) {
     movingCamera = false;
     switch (INTERSECTED.name) {
         case 'about':
-            transition_to_about('/section_parts/'+INTERSECTED.name+'.html');
+            transition_to_about(true);
             break;
     }
 }
