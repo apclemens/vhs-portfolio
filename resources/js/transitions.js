@@ -35,12 +35,12 @@ function transition_to_about(setstate) {
         x: 0,
         y: 60,
         z: 252
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x: Math.PI / 8,
         y: 0,
         z: Math.PI / 2
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
 }
 
 function transition_to_websites(setstate) {
@@ -49,12 +49,12 @@ function transition_to_websites(setstate) {
         x: -18.5,
         y: -70,
         z: -16
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x: 1,
         y: -0.8,
         z: 0.2
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
 }
 
 function transition_to_projects(setstate) {
@@ -63,12 +63,12 @@ function transition_to_projects(setstate) {
         x: 25.8,
         y: 19,
         z: 44
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x: 0,
         y: 1.9,
         z: 0
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
 }
 
 function transition_to_themes(setstate) {
@@ -77,12 +77,12 @@ function transition_to_themes(setstate) {
         x: -9.4,
         y: 21.6,
         z: 87
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x: -1,
         y: 0.2,
         z: 0.6
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
 }
 
 function transition_to_contact(setstate) {
@@ -91,12 +91,12 @@ function transition_to_contact(setstate) {
         x: 109.6,
         y: -43,
         z: 81
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x: -0.2,
         y: 0.4,
         z: 0.6
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
 }
 
 function set_state(page, setstate) {
@@ -120,12 +120,12 @@ function transition_to_home(setstate) {
         x:0,
         y:0,
         z:200
-    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    }, 1000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x:0,
         y:0,
         z:0
-    }, 2000).easing(TWEEN.Easing.Linear.None).onComplete(function(){
+    }, 1000).easing(TWEEN.Easing.Linear.None).onComplete(function(){
 	    movingCamera = true;
 	    currentBoundingBoxList = boundingBoxes;
     })
