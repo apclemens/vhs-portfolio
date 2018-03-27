@@ -1,10 +1,3 @@
-$('#links').find('a').each(function(index, value) {
-    $(this).click(function(event) {
-        event.preventDefault();
-        transition_to('/section_parts' + value.getAttribute('href'), index, value.getAttribute('href'), 'andrew clemens - ' + $(this).text(), true)
-    });
-});
-
 window.onpopstate = function(e) {
     if (e.state) {
         if (e.state.newtitle == "Andrew Clemens") {
@@ -50,25 +43,77 @@ function transition_to_about(setstate) {
     }, 2000).easing(TWEEN.Easing.Linear.None).start();
 }
 
-function transition_to_home(setstate) {
-    switch (document.title) {
-        case 'Andrew Clemens - about':
-            transition_to_home_from_about(setstate);
-            break;
-    }
+function transition_to_websites(setstate) {
+    if (setstate) set_state('projects');
+    new TWEEN.Tween(camera.position).to({
+        x: -18.5,
+        y: -70,
+        z: -16
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    new TWEEN.Tween(camera.rotation).to({
+        x: 1,
+        y: -0.8,
+        z: 0.2
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+}
+
+function transition_to_projects(setstate) {
+    if (setstate) set_state('websites');
+    new TWEEN.Tween(camera.position).to({
+        x: 25.8,
+        y: 19,
+        z: 44
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    new TWEEN.Tween(camera.rotation).to({
+        x: 0,
+        y: 1.9,
+        z: 0
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+}
+
+function transition_to_themes(setstate) {
+    if (setstate) set_state('projects');
+    new TWEEN.Tween(camera.position).to({
+        x: -9.4,
+        y: 21.6,
+        z: 87
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    new TWEEN.Tween(camera.rotation).to({
+        x: -1,
+        y: 0.2,
+        z: 0.6
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+}
+
+function transition_to_contact(setstate) {
+    if (setstate) set_state('websites');
+    new TWEEN.Tween(camera.position).to({
+        x: 109.6,
+        y: -43,
+        z: 81
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
+    new TWEEN.Tween(camera.rotation).to({
+        x: -0.2,
+        y: 0.4,
+        z: 0.6
+    }, 2000).easing(TWEEN.Easing.Linear.None).start();
 }
 
 function set_state(page) {
     var lookup = {
         'home': {'newtitle': 'Andrew Clemens', 'newurl': '/'},
         'about': {'newtitle': 'Andrew Clemens - about', 'newurl': '/about'},
+        'projects': {'newtitle': 'Andrew Clemens - projects', 'newurl': '/projects'},
+        'websites': {'newtitle': 'Andrew Clemens - websites', 'newurl': '/websites'},
+        'themes': {'newtitle': 'Andrew Clemens - themes', 'newurl': '/themes'},
+        'contact': {'newtitle': 'Andrew Clemens - contact', 'newurl': '/contact'},
     }
     document.title = lookup[page]['newtitle'];
     window.history.pushState({
     }, "", lookup[page]['newurl']);
 }
 
-function transition_to_home_from_about(setstate) {
+function transition_to_home(setstate) {
     if (setstate) set_state('home');
     new TWEEN.Tween(camera.position).to({
         x:0,

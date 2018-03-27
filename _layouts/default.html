@@ -354,7 +354,6 @@ function toggleBoundingBoxVisibility(object, show) {
     object.material.opacity = show ? 1 : 0;
     bbox_label_lookup[object.name].material.transparent = !show;
     bbox_label_lookup[object.name].material.opacity = show ? 1 : 0;
-    obj_to_move = bbox_label_lookup[object.name];
     document.body.style.cursor = show ? "pointer" : "auto";
 }
 
@@ -378,6 +377,18 @@ window.onclick = function(e) {
     switch (INTERSECTED.name) {
         case 'about':
             transition_to_about(true);
+            break;
+        case 'websites':
+            transition_to_websites(true);
+            break;
+        case 'projects':
+            transition_to_projects(true);
+            break;
+        case 'themes':
+            transition_to_themes(true);
+            break;
+        case 'contact':
+            transition_to_contact(true);
             break;
     }
 }
