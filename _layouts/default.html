@@ -178,8 +178,12 @@ function init() {
 			object.rotation.set(-0.7, -0.1, 0.8);
 			scene.add(object);
             addBoundingBox(object, "themes");
-	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) page_is_loaded();
+            object.loading_function = function() {
+                this.position.set(-239, -31, -244);
+                new TWEEN.Tween(this.position).to({x:-7, y:-31, z:13}, 2000).easing(TWEEN.Easing.Linear.None).start();
+            }
+            loaded += 1;
+            if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -232,7 +236,7 @@ function page_is_loaded() {
 }
 
 function customAnimations() {
-    var multiplier = 3;
+    var multiplier = 1;
     if (movingCamera)
     	camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
     camera.updateMatrixWorld();
