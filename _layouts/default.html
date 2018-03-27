@@ -136,8 +136,8 @@ function init() {
                 new TWEEN.Tween(this.position).to({y: 56.8}, 2000).easing(TWEEN.Easing.Linear.None).start();
                 new TWEEN.Tween(this.rotation).to({z: 13.056}, 2000).easing(TWEEN.Easing.Linear.None).start();
             }
-	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) page_is_loaded();
+            loaded += 1;
+            if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -172,8 +172,8 @@ function init() {
                     z: bbox.max.z
                 }
             });
-	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) page_is_loaded();
+            loaded += 1;
+            if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -242,8 +242,8 @@ function init() {
                     z: bbox.max.z
                 }
             });
-	    loaded += 1;
-	    if (loaded == NUM_TO_LOAD) page_is_loaded();
+            loaded += 1;
+            if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
 	});
 
@@ -330,7 +330,7 @@ function toXYCoords(pos) {
 function getIntersections() {
     // create a ray with origin at the mouse position
     // and direction into the scene (camera direction)
-    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+    var vector = new THREE.Vector3(mouse.x * window.innerWidth / (window.innerHeight * 4 / 3), mouse.y, 1);
     vector.unproject(camera);
     var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
