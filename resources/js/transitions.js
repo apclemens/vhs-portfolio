@@ -30,7 +30,7 @@ function xtransition_to(page, index, newurl, newtitle, setstate) {
 }
 
 function transition_to_about(setstate) {
-    if (setstate) set_state('about');
+    set_state('about', setstate);
     new TWEEN.Tween(camera.position).to({
         x: 0,
         y: 60,
@@ -44,7 +44,7 @@ function transition_to_about(setstate) {
 }
 
 function transition_to_websites(setstate) {
-    if (setstate) set_state('projects');
+    set_state('projects', setstate);
     new TWEEN.Tween(camera.position).to({
         x: -18.5,
         y: -70,
@@ -58,7 +58,7 @@ function transition_to_websites(setstate) {
 }
 
 function transition_to_projects(setstate) {
-    if (setstate) set_state('websites');
+    set_state('websites', setstate);
     new TWEEN.Tween(camera.position).to({
         x: 25.8,
         y: 19,
@@ -72,7 +72,7 @@ function transition_to_projects(setstate) {
 }
 
 function transition_to_themes(setstate) {
-    if (setstate) set_state('projects');
+    set_state('projects', setstate);
     new TWEEN.Tween(camera.position).to({
         x: -9.4,
         y: 21.6,
@@ -86,7 +86,7 @@ function transition_to_themes(setstate) {
 }
 
 function transition_to_contact(setstate) {
-    if (setstate) set_state('websites');
+    set_state('websites', setstate);
     new TWEEN.Tween(camera.position).to({
         x: 109.6,
         y: -43,
@@ -99,7 +99,7 @@ function transition_to_contact(setstate) {
     }, 2000).easing(TWEEN.Easing.Linear.None).start();
 }
 
-function set_state(page) {
+function set_state(page, setstate) {
     var lookup = {
         'home': {'newtitle': 'Andrew Clemens', 'newurl': '/'},
         'about': {'newtitle': 'Andrew Clemens - about', 'newurl': '/about'},
@@ -109,12 +109,13 @@ function set_state(page) {
         'contact': {'newtitle': 'Andrew Clemens - contact', 'newurl': '/contact'},
     }
     document.title = lookup[page]['newtitle'];
-    window.history.pushState({
-    }, "", lookup[page]['newurl']);
+    if (setstate)
+        window.history.pushState({
+        }, "", lookup[page]['newurl']);
 }
 
 function transition_to_home(setstate) {
-    if (setstate) set_state('home');
+    set_state('home', setstate);
     new TWEEN.Tween(camera.position).to({
         x:0,
         y:0,
@@ -124,7 +125,10 @@ function transition_to_home(setstate) {
         x:0,
         y:0,
         z:0
-    }, 2000).easing(TWEEN.Easing.Linear.None).onComplete(function(){movingCamera = true;})
+    }, 2000).easing(TWEEN.Easing.Linear.None).onComplete(function(){
+	    movingCamera = true;
+	    currentBoundingBoxList = boundingBoxes;
+    })
     .start();
 }
 
