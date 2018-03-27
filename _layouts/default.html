@@ -117,8 +117,8 @@ function init() {
             object.loading_function = function() {
                 object.rotation.z -= 2*Math.PI;
                 object.position.y = 119.8;
-                new TWEEN.Tween(this.position).to({x:-13}, 2000).easing(TWEEN.Easing.Linear.None).start();
-                new TWEEN.Tween(this.rotation).to({y: 56.8}, 2000).easing(TWEEN.Easing.Linear.None).start();
+                new TWEEN.Tween(this.position).to({y: 56.8}, 2000).easing(TWEEN.Easing.Linear.None).start();
+                new TWEEN.Tween(this.rotation).to({z: 13.056}, 2000).easing(TWEEN.Easing.Linear.None).start();
             }
 	    loaded += 1;
 	    if (loaded == NUM_TO_LOAD) page_is_loaded();
