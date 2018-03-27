@@ -67,26 +67,25 @@ function init() {
 	};
 	var onError = function(xhr) {console.log(xhr)};
 
-	//  AIzaSyD7Opj1_EU1VU2dXU8WPj0k-I9GNk0ayss 
-
 	var loader = new THREE.FontLoader();
-	var font = loader.parse(fontJSON);
-	var textGeometry = new THREE.TextGeometry('Andrew Clemens', {
-		font: font,
-		size: 12,
-		height: 5,
-		material: 0,
-	});
-	textGeometry.computeBoundingBox();
-	mesh = new THREE.Mesh(textGeometry, material);
-	var bbox = new THREE.Box3().setFromObject(mesh);
-	// we want to set this mesh to a position at the top of the screen
-	// top of mesh should be window.innerHeight / 2
-	var left = (bbox.min.x - bbox.max.x) / 2;
-	var bottom = 65 - (bbox.max.y - bbox.min.y);
-	mesh.position.set(left, bottom, 0);
-	scene.add(mesh);
-    addBoundingBox(mesh, "about");
+    loader.load('/resources/fonts/living_hell.json', function(font) {
+        var textGeometry = new THREE.TextGeometry('andrew clemens', {
+            font: font,
+            size: 12,
+            height: 5,
+            material: 0,
+        });
+        textGeometry.computeBoundingBox();
+        mesh = new THREE.Mesh(textGeometry, material);
+        var bbox = new THREE.Box3().setFromObject(mesh);
+        // we want to set this mesh to a position at the top of the screen
+        // top of mesh should be window.innerHeight / 2
+        var left = (bbox.min.x - bbox.max.x) / 2;
+        var bottom = 65 - (bbox.max.y - bbox.min.y);
+        mesh.position.set(left, bottom, 0);
+        scene.add(mesh);
+        addBoundingBox(mesh, "about");
+    });
 
 
 

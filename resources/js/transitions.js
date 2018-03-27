@@ -38,14 +38,14 @@ function xtransition_to(page, index, newurl, newtitle, setstate) {
 
 function transition_to(page) {
     new TWEEN.Tween(camera.position).to({
-        x: 0,
-        y: 0,
-        z: 146
+        x: 8,
+        y: 60,
+        z: 200
     }, 2000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
-        x: 0.7,
+        x: Math.PI / 8,
         y: 0,
-        z: 0
+        z: Math.PI / 2
     }, 2000).easing(TWEEN.Easing.Linear.None).start();
 }
 
