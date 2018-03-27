@@ -86,7 +86,13 @@ function init() {
         var bottom = 65 - (bbox.max.y - bbox.min.y);
         mesh.position.set(left, bottom, 0);
         scene.add(mesh);
-        addBoundingBox(mesh, "about");
+        addBoundingBox(mesh, "about", function(bbox, width, height) {
+            return {
+                x: bbox.max.x - width/2,
+                y: bbox.min.y - height/2,
+                z: bbox.min.z
+            }
+        });
         mesh.loading_function = function() {
             this.position.z = -2800;
             new TWEEN.Tween(this.position).to({z:0}, 2000).easing(TWEEN.Easing.Linear.None).start();
@@ -117,7 +123,13 @@ function init() {
 			object.position.set(-13, 56.8, 100);
 			object.rotation.set(2.371, -.3, 13.056);
 			scene.add(object);
-            addBoundingBox(object, "projects");
+            addBoundingBox(object, "projects", function(bbox, width, height) {
+                return {
+                    x: bbox.min.x + width/2,
+                    y: bbox.max.y - height/2,
+                    z: bbox.max.z
+                }
+            });
             object.loading_function = function() {
                 object.rotation.z -= 2*Math.PI;
                 object.position.y = 119.8;
@@ -153,7 +165,13 @@ function init() {
 			object.position.set(57, 0, -50);
 			object.rotation.set(.7, .8, -.3);
 			scene.add(object);
-            addBoundingBox(object, "websites");
+            addBoundingBox(object, "websites", function(bbox, width, height) {
+                return {
+                    x: (bbox.min.x + bbox.max.x) / 2,
+                    y: bbox.max.y - height/2,
+                    z: bbox.max.z
+                }
+            });
 	    loaded += 1;
 	    if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
@@ -177,7 +195,13 @@ function init() {
 			object.position.set(-7, -31, 13);
 			object.rotation.set(-0.7, -0.1, 0.8);
 			scene.add(object);
-            addBoundingBox(object, "themes");
+            addBoundingBox(object, "themes", function(bbox, width, height) {
+                return {
+                    x: bbox.max.x - width/2,
+                    y: bbox.max.y - height/2,
+                    z: bbox.max.z
+                }
+            });
             object.loading_function = function() {
                 this.position.set(-239, -31, -244);
                 new TWEEN.Tween(this.position).to({x:-7, y:-31, z:13}, 2000).easing(TWEEN.Easing.Linear.None).start();
@@ -211,7 +235,13 @@ function init() {
 			object.position.set(79, -50, 0);
 			object.rotation.set(0.3, 0.3, 2.1);
 			scene.add(object);
-            addBoundingBox(object, "contact");
+            addBoundingBox(object, "contact", function(bbox, width, height) {
+                return {
+                    x: bbox.min.x,
+                    y: bbox.max.y - height/2,
+                    z: bbox.max.z
+                }
+            });
 	    loaded += 1;
 	    if (loaded == NUM_TO_LOAD) page_is_loaded();
 		}, onProgress, onError);
@@ -243,7 +273,9 @@ function customAnimations() {
     getIntersections();
 }
 
-function addBoundingBox(object, name) {
+var bbox_label_lookup = {}
+
+function addBoundingBox(object, name, label_pos) {
     var wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0xff0000,
         wireframe: true
@@ -258,26 +290,34 @@ function addBoundingBox(object, name) {
     boundingBoxes.push(box);
     scene.add(box);
 
-    if (name!='about') {return;}
-    return;
-
     var canvas = document.createElement('canvas');
     var context = canvas.getContext('2d');
-    context.font = "Regular 16px Arial";
-    context.fillStyle = "rgba(255, 0, 0, 0.95)";
-    context.fillText('about', 0, 50);
+    var metrics = null;
+    var textHeight = 200;
+    var textWidth = 0;
+    var actualFontSize = 2;
+    context.font = "normal " + textHeight + "px Arial";
+    metrics = context.measureText(name);
+    var textWidth = metrics.width;
+    canvas.width = textWidth;
+    canvas.height = textHeight;
+    context.font = "normal " + textHeight + "px Arial";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillStyle = "#ff0000";
+    context.fillText(name, textWidth/2, textHeight/2);
+
     var texture = new THREE.Texture(canvas);
     texture.needsUpdate = true;
-    var textMaterial = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+    var textMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide, map: texture});
     textMaterial.transparent = true;
-    var textMesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(canvas.width, canvas.height),
-            textMaterial
-            );
-    textMesh.position.set(bbox.min.x, 0, bbox.min.z);
-    textMesh.position.set(110, 15, 0);
-    scene.add(textMesh);
-    console.log(textMesh);
+    textMaterial.opacity = 0;
+    var planeGeo = new THREE.PlaneGeometry(textWidth/20, textHeight/20);
+    var plane = new THREE.Mesh(planeGeo, textMaterial);
+    var pos = label_pos(bbox, textWidth/20, textHeight/20);
+    plane.position.set(pos.x, pos.y, pos.z);
+    scene.add(plane);
+    bbox_label_lookup[name] = plane;
 }
 
 function toXYCoords(pos) {
@@ -319,6 +359,9 @@ function getIntersections() {
 function toggleBoundingBoxVisibility(object, show) {
     object.material.transparent = !show;
     object.material.opacity = show ? 1 : 0;
+    bbox_label_lookup[object.name].material.transparent = !show;
+    bbox_label_lookup[object.name].material.opacity = show ? 1 : 0;
+    obj_to_move = bbox_label_lookup[object.name];
     document.body.style.cursor = show ? "pointer" : "auto";
 }
 
@@ -346,47 +389,46 @@ window.onclick = function(e) {
     }
 }
 
-var index = 5;
- $(document).keypress(function(e){ 
-     if (index == -1) obj = camera;
-     else obj = scene.children[index];
+var obj_to_move;
+$(document).keypress(function(e){ 
+    if(!obj_to_move) return;
 	 var key = e.keyCode ? e.keyCode : e.which;
 	 console.log(key);
 	 if (e.which == 113){
-		 obj.rotation.x += .1;
+		 obj_to_move.rotation.x += .1;
 	 }
 	 if (e.which == 119){
-		 obj.rotation.x -= .1;
+		 obj_to_move.rotation.x -= .1;
 	 }
 	 if (e.which == 97){
-		 obj.rotation.y += .1;
+		 obj_to_move.rotation.y += .1;
 	 }
 	 if (e.which == 115){
-		 obj.rotation.y -= .1;
+		 obj_to_move.rotation.y -= .1;
 	 }
 	 if (e.which == 122){
-		 obj.rotation.z += .1;
+		 obj_to_move.rotation.z += .1;
 	 }
 	 if (e.which == 120){
-		 obj.rotation.z -= .1;
+		 obj_to_move.rotation.z -= .1;
 	 }
 	 if (key == 37){
-		 obj.position.x += 1;
+		 obj_to_move.position.x += 1;
 	 }
 	 if (key == 39){
-		 obj.position.x -= 1;
+		 obj_to_move.position.x -= 1;
 	 }
 	 if (key == 38){
-		 obj.position.y += 1;
+		 obj_to_move.position.y += 1;
 	 }
 	 if (key == 40){
-		 obj.position.y -= 1;
+		 obj_to_move.position.y -= 1;
 	 }
 	 if (key == 44){
-		 obj.position.z += 1;
+		 obj_to_move.position.z += 1;
 	 }
 	 if (key == 46){
-		 obj.position.z -= 1;
+		 obj_to_move.position.z -= 1;
 	 }
  });
 
