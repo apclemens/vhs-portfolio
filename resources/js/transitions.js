@@ -38,9 +38,9 @@ function xtransition_to(page, index, newurl, newtitle, setstate) {
 
 function transition_to_about(page) {
     new TWEEN.Tween(camera.position).to({
-        x: 8,
+        x: 0,
         y: 60,
-        z: 200
+        z: 252
     }, 2000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x: Math.PI / 8,

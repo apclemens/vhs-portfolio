@@ -47,7 +47,8 @@ function init() {
 
 
     projector = new THREE.Projector()
-	renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true, clearColor: 0xffffff});
+	renderer = new THREE.WebGLRenderer({alpha: true, antialias: true, clearColor: 0x000000});
+    renderer.setClearColor(0xffffff, 0);
 	renderer.setSize(window.innerHeight * 4 / 3, window.innerHeight-4);
 	document.body.appendChild(renderer.domElement);
 	scene = new THREE.Scene();
@@ -56,7 +57,6 @@ function init() {
 	camera.position.set(0, 0, 200);
 	var ambientLight = new THREE.AmbientLight(0xcccccc, 0.8);
 	scene.add(ambientLight);
-	material = new THREE.MeshNormalMaterial();
 	controls = new THREE.TrackballControls(camera, renderer.domElement);
 	
 	var onProgress = function (xhr) {
@@ -71,12 +71,16 @@ function init() {
     loader.load('/resources/fonts/living_hell.json', function(font) {
         var textGeometry = new THREE.TextGeometry('andrew clemens', {
             font: font,
-            size: 12,
+            size: 18,
             height: 5,
             material: 0,
         });
+        var materials = [
+            new THREE.MeshPhongMaterial({color: 0xD84315, flatShading: true}),
+            new THREE.MeshPhongMaterial({color: 0xffffff})
+                ];
         textGeometry.computeBoundingBox();
-        mesh = new THREE.Mesh(textGeometry, material);
+        mesh = new THREE.Mesh(textGeometry, materials);
         var bbox = new THREE.Box3().setFromObject(mesh);
         var left = (bbox.min.x - bbox.max.x) / 2;
         var bottom = 65 - (bbox.max.y - bbox.min.y);
