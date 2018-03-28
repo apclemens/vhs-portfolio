@@ -4,9 +4,9 @@
   <head>
     <title>{{page.title}}</title>
     <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/resources/css/style.css">
     <link rel="stylesheet" href="/resources/css/loader.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
     <script src="/resources/fonts/fontJSON.js"></script>
     <script src="https://threejs.org/examples/js/loaders/DDSLoader.js"></script>
@@ -105,8 +105,7 @@ function init() {
             this.position.z = -2800;
             new TWEEN.Tween(this.position).to({z:0}, 2000).easing(TWEEN.Easing.Linear.None).start();
         }
-	    loaded += 1;
-        if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
+	increment_loading_counter();
     });
 
 
@@ -144,8 +143,7 @@ function init() {
                 new TWEEN.Tween(this.position).to({y: 56.8}, 2000).easing(TWEEN.Easing.Linear.None).start();
                 new TWEEN.Tween(this.rotation).to({z: 13.056}, 2000).easing(TWEEN.Easing.Linear.None).start();
             }
-            loaded += 1;
-            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
+	    increment_loading_counter();
 		}, onProgress, onError);
 	});
 
@@ -180,8 +178,7 @@ function init() {
                     z: bbox.max.z
                 }
             });
-            loaded += 1;
-            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
+	    increment_loading_counter();
 		}, onProgress, onError);
 	});
 
@@ -214,8 +211,7 @@ function init() {
                 this.position.set(-239, -31, -244);
                 new TWEEN.Tween(this.position).to({x:-7, y:-31, z:13}, 2000).easing(TWEEN.Easing.Linear.None).start();
             }
-            loaded += 1;
-            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
+	    increment_loading_counter();
 		}, onProgress, onError);
 	});
 
@@ -250,8 +246,7 @@ function init() {
                     z: bbox.max.z
                 }
             });
-            loaded += 1;
-            if (loaded == NUM_TO_LOAD) transition_open_section(this_page_index);
+	    increment_loading_counter();
 		}, onProgress, onError);
 	});
 
@@ -273,7 +268,14 @@ function customAnimations() {
     getIntersections();
 }
 
+function increment_loading_counter() {
+	loaded += 1;
+	if (loaded == NUM_TO_LOAD) {transition_open_section(this_page_index);
+		add_all_bbox_labels();}
+}
+
 var bbox_label_lookup = {}
+var bbox_label_functions = [];
 
 function addBoundingBox(object, name, label_pos) {
     var wireframeMaterial = new THREE.MeshBasicMaterial({
@@ -289,7 +291,17 @@ function addBoundingBox(object, name, label_pos) {
     box.name = name;
     boundingBoxes.push(box);
     scene.add(box);
+    bbox_label_functions.push([name, label_pos, bbox]);
+}
 
+var add_all_bbox_labels = function() {
+	bbox_label_functions.forEach(function(info){
+		add_bbox_label(info[0], info[1], info[2]);
+	});
+	bbox_label_functions = null;
+}
+
+var add_bbox_label = function(name, label_pos, bbox){
     var canvas = document.createElement('canvas');
     var context = canvas.getContext('2d');
     var metrics = null;
@@ -320,7 +332,7 @@ function addBoundingBox(object, name, label_pos) {
     plane.position.set(pos.x, pos.y, pos.z);
     scene.add(plane);
     bbox_label_lookup[name] = plane;
-}
+};
 
 function toXYCoords(pos) {
     var vector = projector.unprojectVector(pos.clone(), camera);
@@ -375,8 +387,9 @@ function playClickSound() {
 function toggleBoundingBoxVisibility(object, show) {
     object.material.transparent = !show;
     object.material.opacity = show ? 1 : 0;
+    if(!bbox_label_functions) {
     bbox_label_lookup[object.name].material.transparent = !show;
-    bbox_label_lookup[object.name].material.opacity = show ? 1 : 0;
+    bbox_label_lookup[object.name].material.opacity = show ? 1 : 0;}
     document.body.style.cursor = show ? "pointer" : "auto";
     if (show) playHoverSound();
 }
