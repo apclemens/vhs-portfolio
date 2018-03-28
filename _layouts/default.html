@@ -360,12 +360,14 @@ function getIntersections() {
 function playHoverSound() {
 	var rand_track = Math.floor(Math.random() * hoversfx);
 	var audio = new Audio("/resources/sfx/hover/"+rand_track+".mp3");
+	audio.volume = 0.2;
 	audio.play();
 }
 
 function playClickSound() {
 	var rand_track = Math.floor(Math.random() * clicksfx);
 	var audio = new Audio("/resources/sfx/click/"+rand_track+".mp3");
+	audio.volume = 0.2;
 	audio.play();
 }
 

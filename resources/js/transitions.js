@@ -277,6 +277,8 @@ function transition_open_contact() {
 }
 
 function transition_open_section(index) {
+    var hh = new Audio("/resources/music/hollywood_heights.flac");
+    hh.play();
     $('body').addClass('loaded');
     // indexes:
     //   -1: home
