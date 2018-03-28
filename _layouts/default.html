@@ -34,6 +34,9 @@
 
 var this_page_index = {{page.section_id}};
 
+var clicksfx = 3;
+var hoversfx = 4;
+
 var info, stats, renderer, scene, camera, controls;
 var mouse = {x:0, y:0}, INTERSECTED, projector, visibleLabel;
 var boundingBoxes = [];
@@ -354,12 +357,25 @@ function getIntersections() {
     }
 }
 
+function playHoverSound() {
+	var rand_track = Math.floor(Math.random() * hoversfx);
+	var audio = new Audio("/resources/sfx/hover/"+rand_track+".mp3");
+	audio.play();
+}
+
+function playClickSound() {
+	var rand_track = Math.floor(Math.random() * clicksfx);
+	var audio = new Audio("/resources/sfx/click/"+rand_track+".mp3");
+	audio.play();
+}
+
 function toggleBoundingBoxVisibility(object, show) {
     object.material.transparent = !show;
     object.material.opacity = show ? 1 : 0;
     bbox_label_lookup[object.name].material.transparent = !show;
     bbox_label_lookup[object.name].material.opacity = show ? 1 : 0;
     document.body.style.cursor = show ? "pointer" : "auto";
+    if (show) playHoverSound();
 }
 
 function animate() {
@@ -380,6 +396,7 @@ window.onclick = function(e) {
     if (!INTERSECTED) return;
     movingCamera = false;
     currentBoundingBoxList = [];
+    playClickSound();
     switch (INTERSECTED.name) {
         case 'about':
             transition_to_about(true);
