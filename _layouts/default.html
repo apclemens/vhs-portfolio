@@ -20,7 +20,7 @@
   </head>
 
   <body>
-	  <iframe style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/ojwL0e8V-fA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+	  <iframe id="hollywoodheights" style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/ojwL0e8V-fA?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 	  <div id="loader-wrapper">
 		  <div id="loader"></div>
 
@@ -272,6 +272,9 @@ function increment_loading_counter() {
 	if (loaded == NUM_TO_LOAD) {transition_open_section(this_page_index);
 		if (this_page_index == -1) currentBoundingBoxList = boundingBoxes;
 		add_all_bbox_labels();}
+	if (loaded == NUM_TO_LOAD - 2) {
+		$('#hollywoodheights').attr('src', $('#hollywoodheights').attr('src') + '&autoplay=1');
+	}
 }
 
 var bbox_label_lookup = {}
