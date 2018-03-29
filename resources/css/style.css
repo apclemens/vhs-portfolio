@@ -82,3 +82,37 @@ canvas {
 #back:hover {
     color: #4A148C;
     background-color: #1B5E20;
+}
+
+.project {
+	height: 150px;
+	width: 150px;
+	border: 3px solid black;
+	display: inline-block;
+	background-color: black;
+	overflow: hidden;
+	position: relative;
+	padding: 0;
+}
+.project img {
+	height: 100%;
+	z-index: 2;
+	position: relative;
+	top: 0;
+	transition: top .1s linear;
+	border: 2px solid #F44336;
+	margin: -2px;
+}
+.project:hover img {
+	top: -50px;
+}
+.project span {
+	z-index: 1;
+	bottom: 0;
+	position: absolute;
+	white-space: normal;
+	width: 100%;
+	text-align: center;
+	margin-bottom: 4px;
+	color: white;
+}
