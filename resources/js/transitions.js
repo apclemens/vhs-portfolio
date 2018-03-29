@@ -29,6 +29,18 @@ function xtransition_to(page, index, newurl, newtitle, setstate) {
     }
 }
 
+function create_section_div(page, top, left, width, height) {
+	var div = document.createElement('div');
+	div.classList.add('section');
+	div.style.top = top;
+	div.style.left = left;
+	div.style.width = width;
+	div.style.height = height;
+	div.id = 'section';
+	$(div).load('/section_parts/'+page+'.html');
+	document.body.append(div);
+}
+
 function transition_to_about(setstate) {
     if(!set_state('about', setstate)){return;};
     new TWEEN.Tween(camera.position).to({
@@ -41,10 +53,11 @@ function transition_to_about(setstate) {
         y: 0,
         z: Math.PI / 2
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	create_section_div('about', '50%', '50%', '50%', '50%');
 }
 
 function transition_to_websites(setstate) {
-    if(!set_state('projects', setstate)){return;};
+    if(!set_state('websites', setstate)){return;};
     new TWEEN.Tween(camera.position).to({
         x: -18.5,
         y: -70,
@@ -55,10 +68,11 @@ function transition_to_websites(setstate) {
         y: -0.8,
         z: 0.2
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	create_section_div('websites', '50%', '50%', '50%', '50%');
 }
 
 function transition_to_projects(setstate) {
-    if(!set_state('websites', setstate)){return;};
+    if(!set_state('projects', setstate)){return;};
     new TWEEN.Tween(camera.position).to({
         x: 25.8,
         y: 19,
@@ -69,10 +83,11 @@ function transition_to_projects(setstate) {
         y: 1.9,
         z: 0
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	create_section_div('projects', '50%', '50%', '50%', '50%');
 }
 
 function transition_to_themes(setstate) {
-    if(!set_state('projects', setstate)){return;};
+    if(!set_state('themes', setstate)){return;};
     new TWEEN.Tween(camera.position).to({
         x: -9.4,
         y: 21.6,
@@ -83,10 +98,11 @@ function transition_to_themes(setstate) {
         y: 0.2,
         z: 0.6
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	create_section_div('themes', '50%', '50%', '50%', '50%');
 }
 
 function transition_to_contact(setstate) {
-    if(!set_state('websites', setstate)){return;};
+    if(!set_state('contact', setstate)){return;};
     new TWEEN.Tween(camera.position).to({
         x: 109.6,
         y: -43,
@@ -97,6 +113,7 @@ function transition_to_contact(setstate) {
         y: 0.4,
         z: 0.6
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	create_section_div('contact', '50%', '50%', '50%', '50%');
 }
 
 function set_state(page, setstate) {
@@ -132,6 +149,8 @@ function transition_to_home(setstate) {
 	    currentBoundingBoxList = boundingBoxes;
     })
     .start();
+	var div = document.getElementById('section');
+	div.parentNode.removeChild(div);
 }
 
 function transition_over(page, index) {

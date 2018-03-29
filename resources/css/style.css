@@ -55,4 +55,7 @@ canvas {
     pointer-events: none;
 }
 
-
+.section {
+	position: fixed;
+	transform: translate(-50%, -50%);
+}
