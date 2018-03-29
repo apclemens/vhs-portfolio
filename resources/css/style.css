@@ -117,3 +117,11 @@ canvas {
 	margin-bottom: 4px;
 	color: white;
 }
+
+#credits {
+    position: absolute;
+    bottom: 0;
+}
+#credits p {
+    margin: 10px;
+}
