@@ -58,4 +58,7 @@ canvas {
 .section {
 	position: fixed;
 	transform: translate(-50%, -50%);
+	border: 5px solid red;
+	border-radius: 40px;
+	background-color: rgba(125, 125, 125, .6);
 }

@@ -43,16 +43,17 @@ function create_section_div(page, top, left, width, height) {
 
 function transition_to_about(setstate) {
     if(!set_state('about', setstate)){return;};
-    new TWEEN.Tween(camera.position).to({
-        x: 0,
-        y: 60,
-        z: 252
-    }, 1000).easing(TWEEN.Easing.Linear.None).start();
     new TWEEN.Tween(camera.rotation).to({
         x: Math.PI / 8,
         y: 0,
         z: Math.PI / 2
-    }, 1000).easing(TWEEN.Easing.Linear.None).start();
+    }, 500).easing(TWEEN.Easing.Linear.None).start();
+	setTimeout(function(){
+    new TWEEN.Tween(camera.position).to({
+        x: 0,
+        y: 60,
+        z: 252
+    }, 500).easing(TWEEN.Easing.Linear.None).start();}, 500)
 	create_section_div('about', '50%', '50%', '50%', '50%');
 }
 
@@ -68,7 +69,7 @@ function transition_to_websites(setstate) {
         y: -0.8,
         z: 0.2
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
-	create_section_div('websites', '50%', '50%', '50%', '50%');
+	create_section_div('websites', '70%', '50%', '60%', '50%');
 }
 
 function transition_to_projects(setstate) {
@@ -83,7 +84,7 @@ function transition_to_projects(setstate) {
         y: 1.9,
         z: 0
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
-	create_section_div('projects', '50%', '50%', '50%', '50%');
+	create_section_div('projects', '50%', '35%', '30%', '90%');
 }
 
 function transition_to_themes(setstate) {
