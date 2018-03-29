@@ -7,6 +7,9 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/resources/css/style.css">
     <link rel="stylesheet" href="/resources/css/loader.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    <script>
+    </script>
     <script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
     <script src="/resources/fonts/fontJSON.js"></script>
     <script src="https://threejs.org/examples/js/loaders/DDSLoader.js"></script>
@@ -260,19 +263,23 @@ function init() {
 
 }
 
+var multiplier = 24;
 function customAnimations() {
-    var multiplier = 3;
-    if (movingCamera)
-    	camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
+	if (movingCamera) {
+		camera.position.set(mouse.x*multiplier, mouse.y*multiplier, 200);
+		camera.lookAt(0, 0, 0);
+	}
     camera.updateMatrixWorld();
     getIntersections();
 }
 
 function increment_loading_counter() {
 	loaded += 1;
-	if (loaded == NUM_TO_LOAD) {transition_open_section(this_page_index);
+	if (loaded == NUM_TO_LOAD) {
+		transition_open_section(this_page_index);
 		if (this_page_index == -1) currentBoundingBoxList = boundingBoxes;
-		add_all_bbox_labels();}
+		setTimeout(add_all_bbox_labels, 3000);
+	}
 	if (loaded == NUM_TO_LOAD - 2) {
 		$('#hollywoodheights').attr('src', $('#hollywoodheights').attr('src') + '&autoplay=1');
 	}
@@ -395,7 +402,9 @@ function toggleBoundingBoxVisibility(object, show) {
     bbox_label_lookup[object.name].material.transparent = !show;
     bbox_label_lookup[object.name].material.opacity = show ? 1 : 0;}
     document.body.style.cursor = show ? "pointer" : "auto";
-    if (show) playHoverSound();
+    if (show) {
+	    playHoverSound();
+    }
 }
 
 function animate() {
