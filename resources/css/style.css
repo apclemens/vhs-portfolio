@@ -78,7 +78,7 @@ canvas {
     color: #0D47A1;
 }
 #back::after {
-    content: "Back to home";
+    content: "back";
 }
 #back:hover {
     color: #4A148C;
