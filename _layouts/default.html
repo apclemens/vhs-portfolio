@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
     <title>{{page.title}}</title>
     <meta charset="utf-8">
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
@@ -278,7 +279,7 @@ function increment_loading_counter() {
 	if (loaded == NUM_TO_LOAD) {
 		transition_open_section(this_page_index);
 		if (this_page_index == -1) currentBoundingBoxList = boundingBoxes;
-		setTimeout(add_all_bbox_labels, 3000);
+        add_all_bbox_labels();
 	}
 	if (loaded == NUM_TO_LOAD - 2) {
 		$('#hollywoodheights').attr('src', $('#hollywoodheights').attr('src') + '&autoplay=1');
