@@ -29,9 +29,10 @@ function xtransition_to(page, index, newurl, newtitle, setstate) {
     }
 }
 
-function create_section_div(page, top, left, width, height) {
+function create_section_div(page, top, left, width, height, backtop, backleft) {
 	var div = document.createElement('div');
 	div.classList.add('section');
+	div.classList.add('dynamic');
 	div.style.top = top;
 	div.style.left = left;
 	div.style.width = width;
@@ -39,6 +40,14 @@ function create_section_div(page, top, left, width, height) {
 	div.id = 'section';
 	$(div).load('/section_parts/'+page+'.html');
 	document.body.append(div);
+
+	var back = document.createElement('div');
+	back.classList.add('dynamic');
+	back.style.top = backtop;
+	back.style.left = backleft;
+	back.id = 'back';
+    back.onclick = function(){transition_to_home(true);};
+	document.body.append(back);
 }
 
 function transition_to_about(setstate) {
@@ -54,7 +63,7 @@ function transition_to_about(setstate) {
         y: 60,
         z: 252
     }, 500).easing(TWEEN.Easing.Linear.None).start();}, 500)
-	create_section_div('about', '50%', '50%', '50%', '50%');
+	create_section_div('about', '50%', '50%', '50%', '50%', '20%', '75%');
 }
 
 function transition_to_websites(setstate) {
@@ -69,7 +78,7 @@ function transition_to_websites(setstate) {
         y: -0.8,
         z: 0.2
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
-	create_section_div('websites', '70%', '50%', '60%', '50%');
+	create_section_div('websites', '70%', '50%', '60%', '50%', '25%', '25%');
 }
 
 function transition_to_projects(setstate) {
@@ -84,7 +93,7 @@ function transition_to_projects(setstate) {
         y: 1.9,
         z: 0
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
-	create_section_div('projects', '50%', '35%', '30%', '90%');
+	create_section_div('projects', '50%', '35%', '30%', '90%', '20%', '75%');
 }
 
 function transition_to_themes(setstate) {
@@ -99,7 +108,7 @@ function transition_to_themes(setstate) {
         y: 0.2,
         z: 0.6
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
-	create_section_div('themes', '50%', '50%', '50%', '50%');
+	create_section_div('themes', '50%', '50%', '50%', '50%', '25%', '25%');
 }
 
 function transition_to_contact(setstate) {
@@ -114,7 +123,7 @@ function transition_to_contact(setstate) {
         y: 0.4,
         z: 0.6
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
-	create_section_div('contact', '50%', '50%', '50%', '50%');
+	create_section_div('contact', '50%', '50%', '50%', '50%', '25%', '25%');
 }
 
 function set_state(page, setstate) {
@@ -150,8 +159,10 @@ function transition_to_home(setstate) {
 	    currentBoundingBoxList = boundingBoxes;
     })
     .start();
-	var div = document.getElementById('section');
-	div.parentNode.removeChild(div);
+    var list = document.getElementsByClassName('dynamic');
+    while (list[0]){
+        list[0].parentNode.removeChild(list[0]);
+    }
 }
 
 function transition_over(page, index) {
