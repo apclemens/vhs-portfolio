@@ -68,7 +68,17 @@ canvas {
     border: 5px solid red;
     border-radius: 40px;
     background-color: rgba(125, 125, 125, .6);
+    padding: 10px;
+    font-size: 24px;
+    width: 110px;
+    text-align: center;
+    cursor: pointer;
+    font-family: "Roboto Mono";
+    color: #0D47A1;
 }
 #back::after {
     content: "Back to home";
 }
+#back:hover {
+    color: #4A148C;
+    background-color: #1B5E20;
