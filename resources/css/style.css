@@ -60,6 +60,7 @@ canvas {
 	border: 5px solid red;
 	border-radius: 40px;
 	background-color: rgba(125, 125, 125, .6);
+	padding: 10px;
 }
 
 #back {
