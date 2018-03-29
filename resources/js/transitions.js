@@ -44,7 +44,9 @@ function transition_to_about(setstate) {
         y: 60,
         z: 252
     }, 500).easing(TWEEN.Easing.Linear.None).start();}, 500)
+	setTimeout(function(){
 	create_section_div('about', '50%', '50%', '50%', '50%', '20%', '75%');
+	}, 1000);
 }
 
 function transition_to_websites(setstate) {
@@ -59,7 +61,9 @@ function transition_to_websites(setstate) {
         y: -0.8,
         z: 0.2
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	setTimeout(function(){
 	create_section_div('websites', '70%', '50%', '60%', '50%', '42.5%', '50%');
+	}, 1000);
 }
 
 function transition_to_projects(setstate) {
@@ -74,7 +78,9 @@ function transition_to_projects(setstate) {
         y: 1.9,
         z: 0
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	setTimeout(function(){
 	create_section_div('projects', '50%', '35%', '30%', '90%', '20%', '75%');
+	}, 1000);
 }
 
 function transition_to_themes(setstate) {
@@ -89,7 +95,9 @@ function transition_to_themes(setstate) {
         y: 0.2,
         z: 0.6
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	setTimeout(function(){
 	create_section_div('themes', '50%', '50%', '50%', '50%', '25%', '25%');
+	}, 1000);
 }
 
 function transition_to_contact(setstate) {
@@ -104,7 +112,9 @@ function transition_to_contact(setstate) {
         y: 0.4,
         z: 0.6
     }, 1000).easing(TWEEN.Easing.Linear.None).start();
+	setTimeout(function(){
 	create_section_div('contact', '50%', '50%', '50%', '50%', '25%', '25%');
+	}, 1000);
 }
 
 function set_state(page, setstate) {
