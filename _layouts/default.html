@@ -279,9 +279,7 @@ function increment_loading_counter() {
 	if (loaded == NUM_TO_LOAD) {
 		transition_open_section(this_page_index);
 		if (this_page_index == -1) currentBoundingBoxList = boundingBoxes;
-        add_all_bbox_labels();
-	}
-	if (loaded == NUM_TO_LOAD - 2) {
+                add_all_bbox_labels();
 		$('#hollywoodheights').attr('src', $('#hollywoodheights').attr('src') + '&autoplay=1');
 	}
 }
